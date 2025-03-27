@@ -16,8 +16,8 @@ namespace BookStore1.Infrastructure.Repository.Implementations
         protected readonly DbSet<TEntity> DbSet;
         protected Repository(BookStoreDbContext db, DbSet<TEntity> dbSet = null)
         {
-            Db = db;
-            DbSet = dbSet;
+            Db = db ?? throw new ArgumentNullException(nameof(db));
+            DbSet = db.Set<TEntity>();
         }
 
         public virtual async Task Add(TEntity entity)
@@ -39,7 +39,7 @@ namespace BookStore1.Infrastructure.Repository.Implementations
         public virtual async Task<TEntity> GetById(int id)
         {
             var entity = await DbSet.FindAsync(id).AsTask();
-            return entity ?? throw new InvalidOperationException("Entity not found");
+            return entity;
         }
 
         public virtual async Task Remove(TEntity entity)

@@ -14,13 +14,15 @@ namespace BookStore1.Infrastructure.Mappings
         public void Configure(EntityTypeBuilder<Book> builder)
         {
             builder.ToTable("Books");
-            builder.HasKey(p => p.Id);
+
+            //builder.Property(p => p.CategoryId).IsRequired().IsRequired();
+            //builder.HasKey(p => p.Id);
+            builder.HasKey(p => p.CategoryId);
             builder.Property(p => p.Name).IsRequired().HasColumnType("varchar(150)");
             builder.Property(p => p.Author).IsRequired().HasColumnType("varchar(150)"); 
             builder.Property(p => p.Description).IsRequired().HasMaxLength(1000);
             builder.Property(p => p.Value).IsRequired();
             builder.Property(p => p.PublishDate).IsRequired();
-            builder.Property(p => p.CategoryId).IsRequired();
         }
     }
 }

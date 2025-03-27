@@ -12,12 +12,12 @@ namespace BookStore.Domain.Services.Implementation
     public class CategoryServices : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IBookService _bookServices;
+        private readonly IBookRepository _bookRepository;
 
-        public CategoryServices(ICategoryRepository categoryRepository, IBookService bookServices = null)
+        public CategoryServices(ICategoryRepository categoryRepository, IBookRepository bookRepository)
         {
             _categoryRepository = categoryRepository;
-            _bookServices = bookServices;
+            _bookRepository = bookRepository;
         }
 
         public async Task<IEnumerable<Category>> GetAll()
@@ -50,7 +50,7 @@ namespace BookStore.Domain.Services.Implementation
 
         public async Task<bool> Remove(Category category)
         {
-            var books = await _bookServices.GetBookByCategory(category.Id);
+            var books = await _bookRepository.GetBooksByCategory(category.Id);
             if (books.Any()) return false;
 
             await _categoryRepository.Remove(category);

@@ -12,21 +12,31 @@ namespace BookStore.Domain.Services.Implementation
     {
         private readonly IBookRepository _bookRepository;
 
-        private readonly IBookService _bookService;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public BookServices(IBookRepository bookRepository, IBookService bookService = null)
+        public BookServices(IBookRepository bookRepository, ICategoryRepository categoryRepository = null)
         {
             _bookRepository = bookRepository;
-            _bookService = bookService;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<Book> Add(Book book)
         {
-            var searchBook = await _bookRepository.Search(c => c.Name == book.Name);
-            if (searchBook.Any())
+            // Ensure category exists before adding a book
+            var category = await _categoryRepository.GetById(book.CategoryId);
+
+            if (category == null)
+            {
+                throw new InvalidOperationException($"Category with ID {book.CategoryId} does not exist. Make sure the category is added first.");
+            }
+
+            // Check for duplicate book names
+            var existingBook = await _bookRepository.Search(b => b.Name == book.Name);
+            if (existingBook.Any())
             {
                 return null;
             }
+
             await _bookRepository.Add(book);
             return book;
         }

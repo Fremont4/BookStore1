@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BookStore1.Infrastructure.Repository.Implementations
 {
-    internal class BookRepository : Repository<Book>, IBookRepository
+    public class BookRepository : Repository<Book>, IBookRepository
     {
         public BookRepository(BookStoreDbContext db, DbSet<Book> dbSet = null) : base(db, dbSet)
         {
